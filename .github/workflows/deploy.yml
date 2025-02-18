@@ -5,6 +5,9 @@ on:
     branches:
       - ballotbash  # Trigger build when pushing to 'ballotbash' branch
 
+permissions:
+  contents: write  # Ensures GitHub Actions can push changes to the repo
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -22,6 +25,9 @@ jobs:
 
       - name: Build the project
         run: npm run build
+
+      - name: List output files (debugging)
+        run: ls -R dist
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
