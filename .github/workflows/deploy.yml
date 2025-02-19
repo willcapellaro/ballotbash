@@ -29,9 +29,26 @@ jobs:
       - name: List output files (debugging)
         run: ls -R dist
 
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Upload static files as artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v3 
         with:
-          branch: gh-pages  # Deploy built files to 'gh-pages'
-          folder: dist       # Ensure 'dist/' is uploaded
-          clean: true        # Remove old files before deploying
+          path: dist/
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build-and-deploy
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      # - name: Deploy to GitHub Pages
+      #   uses: JamesIves/github-pages-deploy-action@v4
+      #   with:
+      #     branch: gh-pages  # Deploy built files to 'gh-pages'
+      #     folder: dist       # Ensure 'dist/' is uploaded
+      #     clean: true        # Remove old files before deploying
